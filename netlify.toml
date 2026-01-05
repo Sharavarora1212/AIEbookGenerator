@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  functions = ".netlify/functions"
+
+[build.environment]
+  NEXT_USE_NETLIFY_EDGE = "true"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Required for Next.js API routes to work with Netlify Functions
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Configure function timeouts (for API routes)
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@netlify/plugin-nextjs"]
+  # Increase timeout for long-running functions (up to 10 seconds for free tier)
+  "app/api/generate/route" = { timeout = 10 }
